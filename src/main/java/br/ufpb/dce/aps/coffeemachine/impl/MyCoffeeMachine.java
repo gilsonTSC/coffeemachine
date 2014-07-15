@@ -26,4 +26,10 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine{
 		this.resto += dime.getValue() % 100;
 		this.factory.getDisplay().info("Total: US$ " + this.divisao + "." + this.resto);
 	}
+
+	public void cancel() {
+		if(this.divisao == 0){
+			throw new CoffeeMachineException("Não tem moedas inseridas");
+		}
+	}
 }
