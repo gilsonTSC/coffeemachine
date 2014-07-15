@@ -2,6 +2,7 @@ package br.ufpb.dce.aps.coffeemachine.impl;
 
 import net.compor.frameworks.jcf.api.ComporFacade;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
+import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
 
@@ -18,6 +19,9 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine{
 	}
 
 	public void insertCoin(Coin dime) {
+		if(dime == null){
+			throw new CoffeeMachineException("Coin null");
+		}
 		this.divisao += dime.getValue() / 100;
 		this.resto += dime.getValue() % 100;
 		this.factory.getDisplay().info("Total: US$ " + this.divisao + "." + this.resto);
