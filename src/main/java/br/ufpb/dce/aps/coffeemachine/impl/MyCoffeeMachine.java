@@ -13,11 +13,13 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine{
 	public MyCoffeeMachine(ComponentsFactory factory){
 		this.factory = factory;
 		this.factory.getDisplay().info("Insert coins and select a drink!");
+		this.divisao = 0;
+		this.resto = 0;
 	}
 
 	public void insertCoin(Coin dime) {
-		this.divisao = dime.getValue() / 100;
-		this.resto = dime.getValue() % 100;
-		this.factory.getDisplay().info("Total: US$ 0.10");
+		this.divisao += dime.getValue() / 100;
+		this.resto += dime.getValue() % 100;
+		this.factory.getDisplay().info("Total: US$ " + this.divisao + "." + this.resto);
 	}
 }
