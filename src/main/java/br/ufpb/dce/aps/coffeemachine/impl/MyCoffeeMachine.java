@@ -10,19 +10,23 @@ import br.ufpb.dce.aps.coffeemachine.Messages;
 public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine{
 
 	private ComponentsFactory factory;
-	private int dolares, centavos;
+	private int dolares, centavos, cont;
+	private Coin[] moedas;
 	
 	public MyCoffeeMachine(ComponentsFactory factory){
 		this.factory = factory;
 		this.factory.getDisplay().info("Insert coins and select a drink!");
 		this.dolares = 0;
 		this.centavos = 0;
+		this.moedas = new Coin[100];
+		this.cont = 0;
 	}
 
 	public void insertCoin(Coin dime) {
 		if(dime == null){
 			throw new CoffeeMachineException("Coin null");
 		}
+		this.moedas[++this.cont] = dime;
 		this.dolares += dime.getValue() / 100;
 		this.centavos += dime.getValue() % 100;
 		this.factory.getDisplay().info("Total: US$ " + this.dolares + "." + this.centavos);
@@ -33,7 +37,13 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine{
 			throw new CoffeeMachineException("Não tem moedas inseridas");
 		}
 		this.factory.getDisplay().warn(Messages.CANCEL_MESSAGE);
-		this.factory.getCashBox().release(Coin.halfDollar);
+		if(this.moedas.length > 2){
+			for(int i = 0; i < this.moedas.length; i++){
+				this.moedas = this.moedas[i].reverse();
+				this.factory.getCashBox().release(this.moedas[i]);
+			}
+		}
 		this.factory.getDisplay().info(Messages.INSERT_COINS_MESSAGE);
 	}
+	
 }
