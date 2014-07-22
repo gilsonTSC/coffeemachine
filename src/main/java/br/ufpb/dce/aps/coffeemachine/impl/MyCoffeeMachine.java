@@ -38,12 +38,14 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine{
 		}
 		this.factory.getDisplay().warn(Messages.CANCEL_MESSAGE);
 		if(this.moedas.length > 2){
+			Coin[] c = Coin.reverse();
 			for(int i = 0; i < this.moedas.length; i++){
-				this.moedas = this.moedas[i].reverse();
 				this.factory.getCashBox().release(this.moedas[i]);
+			}
+			for(int i = 0; i < c.length; i++){
+				this.factory.getCashBox().release(c[i]);
 			}
 		}
 		this.factory.getDisplay().info(Messages.INSERT_COINS_MESSAGE);
 	}
-	
 }
