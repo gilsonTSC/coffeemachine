@@ -102,6 +102,9 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		if (drink.equals(Drink.WHITE)) {
 			this.factory.getCreamerDispenser().release(1.2);
 		}
+		
+		
+		
 		this.factory.getDisplay().info(Messages.RELEASING);
 		this.factory.getCupDispenser().release(1);
 		this.factory.getDrinkDispenser().release(1.2);
@@ -109,5 +112,14 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 		this.zeraVecto();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
+	}
+	
+	private void calculaTroco(int troco){
+		Coin[] c = Coin.reverse();
+		for (int i = 0; i < c.length; i++) {
+			if(c[i].getValue() <= troco){
+				this.factory.getCashBox().count(c[i]);
+			}
+		}
 	}
 }
