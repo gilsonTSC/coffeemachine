@@ -61,7 +61,11 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	public void select(Drink drink) {
 
 		this.factory.getCupDispenser().contains(1);
-		this.factory.getWaterDispenser().contains(1.2);
+		if(!this.factory.getWaterDispenser().contains(1.2)){
+			this.factory.getDisplay().warn(Messages.OUT_OF_WATER);
+			this.returnCoin();
+			return;
+		}
 		if(!this.factory.getCoffeePowderDispenser().contains(1.2)){
 			this.factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
 			this.returnCoin();
