@@ -42,16 +42,19 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			throw new CoffeeMachineException("Não tem moedas inseridas");
 		}
 		this.factory.getDisplay().warn(Messages.CANCEL);
-		// if (this.moedas.length > 0) {
+		this.returnCoin();
+	}
+	
+	private void returnCoin(){
 		Coin[] c = Coin.reverse();
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < this.moedas.length; j++) {
 				if (c[i].equals(this.moedas[j])) {
 					this.factory.getCashBox().release(this.moedas[j]);
+					this.moedas[j] = null;
 				}
 			}
 		}
-		//s}
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
 
@@ -59,7 +62,11 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 		this.factory.getCupDispenser().contains(1);
 		this.factory.getWaterDispenser().contains(1.2);
-		this.factory.getCoffeePowderDispenser().contains(1.2);
+		if(!this.factory.getCoffeePowderDispenser().contains(1.2)){
+			this.factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
+			this.returnCoin();
+			return;
+		}
 		if (drink.equals(Drink.BLACK_SUGAR)) {
 			this.factory.getSugarDispenser().contains(1.2);
 		}
