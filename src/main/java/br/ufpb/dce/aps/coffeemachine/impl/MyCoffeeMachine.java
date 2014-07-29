@@ -44,59 +44,70 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.factory.getDisplay().warn(Messages.CANCEL);
 		this.returnCoin();
 	}
-	
-	private void returnCoin(){
+
+	private void returnCoin() {
 		Coin[] c = Coin.reverse();
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < this.moedas.length; j++) {
 				if (c[i].equals(this.moedas[j])) {
 					this.factory.getCashBox().release(this.moedas[j]);
-					this.moedas[j] = null;
 				}
 			}
 		}
+		this.zeraVecto();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
+	}
+	
+	private void zeraVecto(){
+		for (int j = 0; j < this.moedas.length; j++) {
+			this.moedas[j] = null;
+		}
 	}
 
 	public void select(Drink drink) {
 
-		if(!this.factory.getCupDispenser().contains(1)){
+		if (!this.factory.getCupDispenser().contains(1)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_CUP);
 			this.returnCoin();
 			return;
 		}
-		if(!this.factory.getWaterDispenser().contains(1.2)){
+		if (!this.factory.getWaterDispenser().contains(1.2)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_WATER);
 			this.returnCoin();
 			return;
 		}
-		if(!this.factory.getCoffeePowderDispenser().contains(1.2)){
+		if (!this.factory.getCoffeePowderDispenser().contains(1.2)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
 			this.returnCoin();
 			return;
 		}
+
 		if (drink.equals(Drink.BLACK_SUGAR)) {
-			if(!this.factory.getSugarDispenser().contains(1.2)){
+			if (!this.factory.getSugarDispenser().contains(1.2)) {
 				this.factory.getDisplay().warn(Messages.OUT_OF_SUGAR);
 				this.returnCoin();
 				return;
 			}
 		}
+		if (drink.equals(Drink.WHITE)) {
+			this.factory.getCreamerDispenser().contains(1.2);
+		}
 		this.factory.getDisplay().info(Messages.MIXING);
 		this.factory.getCoffeePowderDispenser().release(1.2);
 		this.factory.getWaterDispenser().release(1.2);
+
 		if (drink.equals(Drink.BLACK_SUGAR)) {
 			this.factory.getSugarDispenser().release(1.2);
 		}
-
+		if (drink.equals(Drink.WHITE)) {
+			this.factory.getCreamerDispenser().release(1.2);
+		}
 		this.factory.getDisplay().info(Messages.RELEASING);
 		this.factory.getCupDispenser().release(1);
 		this.factory.getDrinkDispenser().release(1.2);
 		this.factory.getDisplay().info(Messages.TAKE_DRINK);
-		for(int i = 0; i < this.moedas.length; i++){
-			this.moedas[i] = null;
-		}
+
+		this.zeraVecto();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
-		
 	}
 }
