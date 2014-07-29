@@ -68,7 +68,11 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			return;
 		}
 		if (drink.equals(Drink.BLACK_SUGAR)) {
-			this.factory.getSugarDispenser().contains(1.2);
+			if(!this.factory.getSugarDispenser().contains(1.2)){
+				this.factory.getDisplay().warn(Messages.OUT_OF_SUGAR);
+				this.returnCoin();
+				return;
+			}
 		}
 		this.factory.getDisplay().info(Messages.MIXING);
 		this.factory.getCoffeePowderDispenser().release(1.2);
