@@ -62,9 +62,22 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.moedas.clear();
 	}
 	
+	private void naoTemTroco(){
+		for (Coin r : Coin.reverse()) {
+			for(Coin aux : this.moedas){
+				if(aux == r){
+					if(this.factory.getCashBox().count(r) == 0){
+						this.returnCoin();		
+						return;
+					}
+				}
+			}
+		}
+	}
+	
 	private void planCoins(int troco) {
 		for (Coin r : Coin.reverse()) {
-			if (r.getValue() <= troco) {
+			while (r.getValue() <= troco) {
 				this.factory.getCashBox().count(r);
 				troco -= r.getValue();
 			}
