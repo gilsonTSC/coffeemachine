@@ -13,11 +13,9 @@ import br.ufpb.dce.aps.coffeemachine.Messages;
 public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 	private ComponentsFactory factory;
-	private int dolares, centavos, cont;
-	//private Coin[] moedas;
+	private int dolares, centavos;
 	private ArrayList<Coin> moedas;
 	private Drink drink;
-	private int quantDrink = 0;
 	private final int  VALORCAFE = 35;
 
 	public MyCoffeeMachine(ComponentsFactory factory) {
@@ -25,19 +23,16 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.factory.getDisplay().info("Insert coins and select a drink!");
 		this.dolares = 0;
 		this.centavos = 0;
-		//this.moedas = new Coin[100];
-		moedas = new ArrayList<Coin>();
-		this.cont = 0;
+		this.moedas = new ArrayList<Coin>();
 	}
 
-	public void insertCoin(Coin dime) {
-		if (dime == null) {
+	public void insertCoin(Coin coin) {
+		if (coin == null) {
 			throw new CoffeeMachineException("Coin null");
 		}
-		//this.moedas[++this.cont] = dime;
-		this.moedas.add(dime);
-		this.dolares += dime.getValue() / 100;
-		this.centavos += dime.getValue() % 100;
+		this.moedas.add(coin);
+		this.dolares += coin.getValue() / 100;
+		this.centavos += coin.getValue() % 100;
 		this.factory.getDisplay().info(
 				"Total: US$ " + this.dolares + "." + this.centavos);
 	}
@@ -67,7 +62,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.moedas.clear();
 	}
 	
-	public void planCoins(int troco) {
+	private void planCoins(int troco) {
 		for (Coin r : Coin.reverse()) {
 			if (r.getValue() <= troco) {
 				this.factory.getCashBox().count(r);
@@ -76,9 +71,9 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		}
 	}
 	
-	public void releaseCoins(int troco) {		
+	private void releaseCoins(int troco) {		
 		for (Coin r : Coin.reverse()) {
-			if (r.getValue() <= troco) {
+			while (r.getValue() <= troco) {
 				this.factory.getCashBox().release(r);
 				troco -= r.getValue();
 			}
@@ -86,8 +81,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 	}
 
-	public int calculaTroco(){
-		
+	private int calculaTroco(){
 		int contadorMoedas = 0;
 		
 		for(Coin r : Coin.reverse()){
@@ -102,6 +96,12 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 
 	public void select(Drink drink) {
+		
+		if(calculaTroco()<0){
+			this.factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
+			this.returnCoin();		
+			return;
+		}
 
 		if (!this.factory.getCupDispenser().contains(1)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_CUP);
@@ -124,7 +124,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		}
 		
 		if (drink == this.drink.WHITE_SUGAR) {
-			factory.getCreamerDispenser().contains(2.0); // inOrder.verify(creamerDispenser).contains(anyDouble());
+			factory.getCreamerDispenser().contains(2.0); 
 			factory.getSugarDispenser().contains(5.0);
 
 		}
@@ -138,9 +138,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			}
 		}
 		
-		//if(calculaTroco()>0){
-			planCoins(calculaTroco());
-		//}
+		planCoins(calculaTroco());
 		
 		this.factory.getDisplay().info(Messages.MIXING);
 		this.factory.getCoffeePowderDispenser().release(1.2);
@@ -162,10 +160,9 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.factory.getCupDispenser().release(1);
 		this.factory.getDrinkDispenser().release(1.2);
 		this.factory.getDisplay().info(Messages.TAKE_DRINK);
-		
-		//if(calculaTroco()>0){
-			releaseCoins(calculaTroco());
-	//	}
+			
+		releaseCoins(calculaTroco());
+	
 		this.zeraVecto();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
