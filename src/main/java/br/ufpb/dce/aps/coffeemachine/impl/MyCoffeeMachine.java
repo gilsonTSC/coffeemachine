@@ -2,6 +2,10 @@ package br.ufpb.dce.aps.coffeemachine.impl;
 
 import java.util.ArrayList;
 
+
+
+
+
 import net.compor.frameworks.jcf.api.ComporFacade;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
@@ -12,11 +16,12 @@ import br.ufpb.dce.aps.coffeemachine.Messages;
 
 public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
+
 	private ComponentsFactory factory;
 	private int dolares, centavos;
 	private ArrayList<Coin> moedas;
-	private Drink drink;
 	private final int  VALORCAFE = 35;
+	boolean notAlerta= true;
 
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		this.factory = factory;
@@ -24,6 +29,15 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.dolares = 0;
 		this.centavos = 0;
 		this.moedas = new ArrayList<Coin>();
+		this.addComponents();
+		
+	}
+	@Override
+	protected void addComponents() {
+		this.add(new CafePreto(this.factory));
+		this.add(new CafeBranco(this.factory));
+		this.add(new CafeBrancoComAcucar(this.factory));
+		this.add(new CafePretoComAcucar(this.factory));
 	}
 
 	public void insertCoin(Coin coin) {
@@ -62,23 +76,13 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.moedas.clear();
 	}
 	
-	private void naoTemTroco(){
-		for (Coin r : Coin.reverse()) {
-			for(Coin aux : this.moedas){
-				if(aux == r){
-					if(this.factory.getCashBox().count(r) == 0){
-						this.returnCoin();		
-						return;
-					}
-				}
-			}
-		}
-	}
-	
 	private void planCoins(int troco) {
 		for (Coin r : Coin.reverse()) {
 			while (r.getValue() <= troco) {
-				this.factory.getCashBox().count(r);
+				if(this.factory.getCashBox().count(r) == 0){
+					this.factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
+					this.returnCoin();	
+				}
 				troco -= r.getValue();
 			}
 		}
@@ -109,71 +113,24 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 
 	public void select(Drink drink) {
-		
+				
 		if(calculaTroco()<0){
 			this.factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
 			this.returnCoin();		
 			return;
 		}
-
-		if (!this.factory.getCupDispenser().contains(1)) {
-			this.factory.getDisplay().warn(Messages.OUT_OF_CUP);
-			this.returnCoin();
-			return;
-		}
-		if (!this.factory.getWaterDispenser().contains(1.2)) {
-			this.factory.getDisplay().warn(Messages.OUT_OF_WATER);
-			this.returnCoin();
-			return;
-		}
-		if (!this.factory.getCoffeePowderDispenser().contains(1.2)) {
-			this.factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
-			this.returnCoin();
-			return;
-		}
+		notAlerta = (Boolean)requestService("VerificaDrink", drink);
 		
-		if (drink.equals(Drink.WHITE)) {
-			this.factory.getCreamerDispenser().contains(1.2);
-		}
-		
-		if (drink == this.drink.WHITE_SUGAR) {
-			factory.getCreamerDispenser().contains(2.0); 
-			factory.getSugarDispenser().contains(5.0);
-
-		}
-	
-
-		if (drink.equals(Drink.BLACK_SUGAR)) {
-			if (!this.factory.getSugarDispenser().contains(1.2)) {
-				this.factory.getDisplay().warn(Messages.OUT_OF_SUGAR);
-				this.returnCoin();
-				return;
-			}
+		if(!notAlerta){
+			returnCoin();
+			return;
 		}
 		
 		planCoins(calculaTroco());
 		
 		this.factory.getDisplay().info(Messages.MIXING);
-		this.factory.getCoffeePowderDispenser().release(1.2);
-		this.factory.getWaterDispenser().release(1.2);
-
-		if (drink.equals(Drink.BLACK_SUGAR)) {
-			this.factory.getSugarDispenser().release(1.2);
-		}
-		if (drink.equals(Drink.WHITE)) {
-			this.factory.getCreamerDispenser().release(1.2);
-		}
-		
-		if (drink.equals(Drink.WHITE_SUGAR)) {
-			this.factory.getCreamerDispenser().release(1.2);
-			factory.getSugarDispenser().release(5.0);
-		}
-		
-		this.factory.getDisplay().info(Messages.RELEASING);
-		this.factory.getCupDispenser().release(1);
-		this.factory.getDrinkDispenser().release(1.2);
-		this.factory.getDisplay().info(Messages.TAKE_DRINK);
-			
+		requestService("comparaDrink", drink);
+		requestService("LiberandoBebida");
 		releaseCoins(calculaTroco());
 	
 		this.zeraVecto();
