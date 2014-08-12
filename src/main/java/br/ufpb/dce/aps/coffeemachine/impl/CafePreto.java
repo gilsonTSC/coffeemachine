@@ -8,10 +8,12 @@ public class CafePreto extends Cafe{
 	
 	public ComponentsFactory factory;
 	
+	
 	public CafePreto(ComponentsFactory factory){
 		super();
 		this.factory = factory;
 	}
+	
 	@Service	
 	public boolean VerificaDrinkPreto(){
 	
@@ -29,7 +31,6 @@ public class CafePreto extends Cafe{
 		}
 		return true;
 	}
-	
 	@Service
 	public void liberaIngredientesCafePreto(){
 		this.factory.getCoffeePowderDispenser().release(1.2);

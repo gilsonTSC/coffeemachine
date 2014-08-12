@@ -2,10 +2,6 @@ package br.ufpb.dce.aps.coffeemachine.impl;
 
 import java.util.ArrayList;
 
-
-
-
-
 import net.compor.frameworks.jcf.api.ComporFacade;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
@@ -15,7 +11,6 @@ import br.ufpb.dce.aps.coffeemachine.Drink;
 import br.ufpb.dce.aps.coffeemachine.Messages;
 
 public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
-
 
 	private ComponentsFactory factory;
 	private int dolares, centavos;
@@ -30,7 +25,6 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.centavos = 0;
 		this.moedas = new ArrayList<Coin>();
 		this.addComponents();
-		
 	}
 	@Override
 	protected void addComponents() {
@@ -47,8 +41,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.moedas.add(coin);
 		this.dolares += coin.getValue() / 100;
 		this.centavos += coin.getValue() % 100;
-		this.factory.getDisplay().info(
-				"Total: US$ " + this.dolares + "." + this.centavos);
+		this.factory.getDisplay().info("Total: US$ " + this.dolares + "." + this.centavos);
 	}
 
 	public void cancel() {
@@ -67,7 +60,6 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 				}
 			}
 		}
-				
 		this.zeraVecto();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
@@ -76,16 +68,14 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.moedas.clear();
 	}
 	
-	private void planCoins(int troco) {
+	private boolean planCoins(int troco) {
 		for (Coin r : Coin.reverse()) {
-			while (r.getValue() <= troco) {
-				if(this.factory.getCashBox().count(r) == 0){
-					this.factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
-					this.returnCoin();	
-				}
+			if (r.getValue() <= troco && factory.getCashBox().count(r)>0) {
 				troco -= r.getValue();
 			}
 		}
+		boolean t = troco == 0;
+		return !t;
 	}
 	
 	private void releaseCoins(int troco) {		
@@ -95,12 +85,10 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 				troco -= r.getValue();
 			}
 		}
-
 	}
 
 	private int calculaTroco(){
 		int contadorMoedas = 0;
-		
 		for(Coin r : Coin.reverse()){
 			for(Coin aux : this.moedas){
 				if(aux == r){
@@ -111,23 +99,22 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		return contadorMoedas - this.VALORCAFE;
 	}
 
-
-	public void select(Drink drink) {
-				
+	public void select(Drink drink) {	
 		if(calculaTroco()<0){
 			this.factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
 			this.returnCoin();		
 			return;
 		}
 		notAlerta = (Boolean)requestService("VerificaDrink", drink);
-		
 		if(!notAlerta){
 			returnCoin();
 			return;
 		}
-		
-		planCoins(calculaTroco());
-		
+		if(planCoins(calculaTroco())){
+			this.factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);			
+			returnCoin();
+			return;
+		}
 		this.factory.getDisplay().info(Messages.MIXING);
 		requestService("comparaDrink", drink);
 		requestService("LiberandoBebida");
