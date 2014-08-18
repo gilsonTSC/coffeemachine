@@ -13,10 +13,22 @@ public class CafeBranco extends CafePreto{
 	}
 	@Service
 	public boolean VerificaDrinkBranco(){
-		if(!VerificaDrinkPreto()){
+//		if(!VerificaDrinkPreto()){
+//			return false;
+//		}
+		if (!this.factory.getCupDispenser().contains(1)) {
+			this.factory.getDisplay().warn(Messages.OUT_OF_CUP);
 			return false;
 		}
-		if (!this.factory.getCreamerDispenser().contains(1.2)) {
+		if (!this.factory.getWaterDispenser().contains(80)) {
+			this.factory.getDisplay().warn(Messages.OUT_OF_WATER);
+			return false;
+		}
+		if (!this.factory.getCoffeePowderDispenser().contains(15)) {
+			this.factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
+			return false;
+		}
+		if (!this.factory.getCreamerDispenser().contains(20)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_CREAMER);
 			return false;
 		}
@@ -25,7 +37,9 @@ public class CafeBranco extends CafePreto{
 	}
 	@Service
 	public void liberaIngredientesCafeBranco(){
-		liberaIngredientesCafePreto();
-		this.factory.getCreamerDispenser().release(1.2);
+		//liberaIngredientesCafePreto();
+		this.factory.getCoffeePowderDispenser().release(15);
+		this.factory.getWaterDispenser().release(80);
+		this.factory.getCreamerDispenser().release(20);
 	}
 }
