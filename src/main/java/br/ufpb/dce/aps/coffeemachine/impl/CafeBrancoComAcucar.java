@@ -21,7 +21,7 @@ public class CafeBrancoComAcucar extends CafePreto {
 	@Service
 	public void liberaIngredientesCafeBrancoComAcucar(){
 		liberaIngredientesCafePreto();
-		this.factory.getCreamerDispenser().release(1.2);
-		factory.getSugarDispenser().release(5.0);
+		this.factory.getCreamerDispenser().release(2);
+		factory.getSugarDispenser().release(5);
 	}
 }

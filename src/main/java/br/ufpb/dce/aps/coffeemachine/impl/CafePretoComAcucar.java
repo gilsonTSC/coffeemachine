@@ -14,7 +14,7 @@ public class CafePretoComAcucar extends CafePreto {
 		if(!VerificaDrinkPreto()){
 			return false;
 		}
-		if (!this.factory.getSugarDispenser().contains(1.2)) {
+		if (!this.factory.getSugarDispenser().contains(5)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_SUGAR);
 			return false;
 		}
@@ -23,6 +23,6 @@ public class CafePretoComAcucar extends CafePreto {
 	@Service
 	public void LiberaIngredientesCafePretoComAcucar() {
 		liberaIngredientesCafePreto();
-		factory.getSugarDispenser().release(5.0);	
+		factory.getSugarDispenser().release(5);	
 	}
 }
