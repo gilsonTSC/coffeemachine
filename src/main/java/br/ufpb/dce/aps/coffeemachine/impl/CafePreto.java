@@ -21,11 +21,11 @@ public class CafePreto extends Cafe{
 			this.factory.getDisplay().warn(Messages.OUT_OF_CUP);
 			return false;
 		}
-		if (!this.factory.getWaterDispenser().contains(1.2)) {
+		if (!this.factory.getWaterDispenser().contains(100)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_WATER);
 			return false;
 		}
-		if (!this.factory.getCoffeePowderDispenser().contains(1.2)) {
+		if (!this.factory.getCoffeePowderDispenser().contains(15)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
 			return false;
 		}
@@ -33,14 +33,14 @@ public class CafePreto extends Cafe{
 	}
 	@Service
 	public void liberaIngredientesCafePreto(){
-		this.factory.getCoffeePowderDispenser().release(1.2);
-		this.factory.getWaterDispenser().release(1.2);
+		this.factory.getCoffeePowderDispenser().release(15);
+		this.factory.getWaterDispenser().release(100);
 	}
 	@Service
 	public void LiberandoBebida(){
 		this.factory.getDisplay().info(Messages.RELEASING);
 		this.factory.getCupDispenser().release(1);
-		this.factory.getDrinkDispenser().release(1.2);
+		this.factory.getDrinkDispenser().release(100);
 		this.factory.getDisplay().info(Messages.TAKE_DRINK);
 	} 
 }
