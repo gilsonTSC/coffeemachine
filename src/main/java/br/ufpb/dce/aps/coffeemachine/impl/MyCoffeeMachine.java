@@ -19,13 +19,8 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	boolean notAlerta = true;
 	int[] trocoPlan = new int[6];
 
-	public MyCoffeeMachine(ComponentsFactory factory) {
-		this.factory = factory;
-		this.factory.getDisplay().info("Insert coins and select a drink!");
-		this.dolares = 0;
-		this.centavos = 0;
-		this.moedas = new ArrayList<Coin>();
-		this.addComponents();
+	public MyCoffeeMachine(ComponentsFactory factory2) {
+		this.setFactory(factory2);
 	}
 
 	@Override
@@ -39,7 +34,8 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 	public void insertCoin(Coin coin) {
 		if (coin == null) {
-			throw new CoffeeMachineException("Coin null");
+			
+			throw new CoffeeMachineException("");
 		}
 		this.moedas.add(coin);
 		this.dolares += coin.getValue() / 100;
@@ -145,5 +141,18 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 		this.zeraVecto();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
+	}
+
+	public void setFactory(ComponentsFactory factory) {
+		this.factory = factory;
+		this.factory.getDisplay().info(Messages.INSERT_COINS);
+		this.dolares = 0;
+		this.centavos = 0;
+		this.moedas = new ArrayList<Coin>();
+		this.addComponents();
+	}
+
+	public void readBadge(int badgeCode) {
+		
 	}
 }
