@@ -28,6 +28,9 @@ public class Cafe extends Component{
 		if (drink.equals(Drink.BLACK_SUGAR)) {
 			notAlerta = (Boolean)requestService("VerificaDrinkPretoComAcucar");
 		}
+		if(drink.equals(Drink.BOUILLON)){
+			notAlerta = (Boolean)requestService("VerificaDrinkBouillon");
+		}
 		return notAlerta;
 	}
 	
@@ -46,6 +49,9 @@ public class Cafe extends Component{
 		
 		if (drink.equals(Drink.WHITE_SUGAR)) {
 			requestService("liberaIngredientesCafeBrancoComAcucar");
+		}
+		if (drink.equals(Drink.BOUILLON)) {
+			requestService("liberaIngredientesBouillon");
 		}	
 	}
 }
