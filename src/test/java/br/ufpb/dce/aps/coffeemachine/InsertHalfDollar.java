@@ -135,7 +135,7 @@ public class InsertHalfDollar extends CoffeeMachineTest {
 		verifyDrinkRelease(inOrder);
 		verifyCloseSession(inOrder, Coin.quarter);
 	}
-	
+
 	@Test
 	public void insertCoins() {
 		// Operation under test

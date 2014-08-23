@@ -3,6 +3,7 @@ package br.ufpb.dce.aps.coffeemachine.impl;
 import java.util.ArrayList;
 
 import net.compor.frameworks.jcf.api.ComporFacade;
+import net.compor.frameworks.jcf.api.Service;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
@@ -19,9 +20,6 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	boolean notAlerta = true;
 	int[] trocoPlan = new int[6];
 
-	public MyCoffeeMachine(ComponentsFactory factory2) {
-		this.setFactory(factory2);
-	}
 
 	@Override
 	protected void addComponents() {
@@ -151,8 +149,13 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.moedas = new ArrayList<Coin>();
 		this.addComponents();
 	}
+	
+	@Service
+	public void lerCracha(){
+		this.factory.getDisplay().info(Messages.BADGE_READ);
+	}
 
 	public void readBadge(int badgeCode) {
-		
+		this.lerCracha();
 	}
 }
