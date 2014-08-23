@@ -19,7 +19,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	private int VALORCAFE = 35;
 	boolean notAlerta = true;
 	int[] trocoPlan = new int[6];
-
+	private boolean lerCacha = false, lerCoin = false;
 
 	@Override
 	protected void addComponents() {
@@ -31,15 +31,22 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	}
 
 	public void insertCoin(Coin coin) {
-		if (coin == null) {
-			
-			throw new CoffeeMachineException("");
+		if (!this.lerCacha) {
+			this.lerCoin = true;
+			this.lerCacha = false;
+			if (coin == null) {
+				throw new CoffeeMachineException("");
+			}
+			this.moedas.add(coin);
+			this.dolares += coin.getValue() / 100;
+			this.centavos += coin.getValue() % 100;
+			this.factory.getDisplay().info(
+					"Total: US$ " + this.dolares + "." + this.centavos);
+			return;
 		}
-		this.moedas.add(coin);
-		this.dolares += coin.getValue() / 100;
-		this.centavos += coin.getValue() % 100;
-		this.factory.getDisplay().info(
-				"Total: US$ " + this.dolares + "." + this.centavos);
+		this.factory.getDisplay().warn(Messages.CAN_NOT_INSERT_COINS);
+		this.returnCoin();
+		
 	}
 
 	public void cancel() {
@@ -49,7 +56,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.factory.getDisplay().warn(Messages.CANCEL);
 		this.returnCoin();
 	}
-
+	
 	private void returnCoin() {
 		for (Coin r : Coin.reverse()) {
 			for (Coin aux : this.moedas) {
@@ -65,7 +72,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	private void zeraVecto() {
 		this.moedas.clear();
 	}
-  
+
 	private int[] planCoins(int troco) throws CoffeeMachineException {
 		int[] trocoPlan = new int[6];
 		int i = 0;
@@ -109,7 +116,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	}
 
 	public void select(Drink drink) {
-		if(drink.equals(Drink.BOUILLON)){
+		if (drink.equals(Drink.BOUILLON)) {
 			this.VALORCAFE = 25;
 		}
 		if (calculaTroco() < 0) {
@@ -149,13 +156,17 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.moedas = new ArrayList<Coin>();
 		this.addComponents();
 	}
-	
-	@Service
-	public void lerCracha(){
-		this.factory.getDisplay().info(Messages.BADGE_READ);
-	}
 
 	public void readBadge(int badgeCode) {
-		this.lerCracha();
+		if(!this.lerCoin){
+			this.factory.getDisplay().info(Messages.BADGE_READ);
+			this.lerCacha = true;
+			this.lerCoin = true;
+		}else{
+			this.factory.getDisplay().warn(Messages.CAN_NOT_INSERT_COINS);
+		}
+		
+		
+		
 	}
 }
