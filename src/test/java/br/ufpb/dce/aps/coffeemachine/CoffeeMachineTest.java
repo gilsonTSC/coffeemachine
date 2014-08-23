@@ -695,6 +695,10 @@ public abstract class CoffeeMachineTest {
 		inOrder.verify(display).warn(Messages.CANCEL);
 	}
 
+	protected void verifyCannotInsertCoinsMessage(InOrder inOrder) {
+		inOrder.verify(display).warn(Messages.CAN_NOT_INSERT_COINS);
+	}
+
 	protected void insertCoins(Coin... coins) {
 		for (Coin coin : coins) {
 			facade.insertCoin(coin);
@@ -726,7 +730,7 @@ public abstract class CoffeeMachineTest {
 		return objs;
 	}
 
-	protected void verifyBadgeRead() {
-		verify(display).info(Messages.BADGE_READ);
+	protected void verifyBadgeRead(InOrder inOrder) {
+		inOrder.verify(display).info(Messages.BADGE_READ);
 	}
 }
