@@ -23,6 +23,7 @@ public abstract class CoffeeMachineTest {
 	protected Dispenser sugarDispenser;
 	protected Dispenser creamerDispenser;
 	protected Dispenser bouillonDispenser;
+	private PayrollSystem payrollSystem;
 
 	protected CoffeeMachine createFacade(ComponentsFactory factory) {
 		CoffeeMachine coffeeMachine = null;
@@ -58,6 +59,7 @@ public abstract class CoffeeMachineTest {
 		sugarDispenser = factory.getSugarDispenser();
 		creamerDispenser = factory.getCreamerDispenser();
 		bouillonDispenser = factory.getBouillonDispenser();
+		payrollSystem = factory.getPayrollSystem();
 	}
 
 	@After
@@ -727,7 +729,7 @@ public abstract class CoffeeMachineTest {
 	protected Object[] mocks() {
 		return asArray(display, cashBox, coffeePowderDispenser, waterDispenser,
 				cupDispenser, drinkDispenser, sugarDispenser, creamerDispenser,
-				bouillonDispenser);
+				bouillonDispenser, payrollSystem);
 	}
 
 	protected Object[] asArray(Object... objs) {
@@ -737,4 +739,14 @@ public abstract class CoffeeMachineTest {
 	protected void verifyBadgeRead(InOrder inOrder) {
 		inOrder.verify(display).info(Messages.BADGE_READ);
 	}
+
+
+	protected void doAcceptBadgeCode() {
+		when(payrollSystem.debit(anyInt(), anyInt())).thenReturn(true);
+	}
+
+	protected void verifyPayrollDebit(InOrder inOrder, int drinkPrice, int badgeCode) {
+		inOrder.verify(payrollSystem).debit(drinkPrice, badgeCode);
+	}
+
 }
