@@ -107,4 +107,8 @@ public class MyCoin extends Component{
 	public int centavos(Coin coin) {
 		return this.centavos += coin.getValue() % 100;
 	}
+	@Service
+	public int getValorCafe() {
+		return this.VALORCAFE;
+	}
 }

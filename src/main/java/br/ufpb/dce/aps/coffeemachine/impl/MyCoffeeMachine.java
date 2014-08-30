@@ -13,6 +13,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	private ComponentsFactory factory;
 	boolean notAlerta = true;
 	private boolean lerCacha = false, lerCoin = false;
+	private int badgeCode;
 
 	@Override
 	protected void addComponents() {
@@ -32,9 +33,10 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			}
 			requestService("addCoin", coin);
 			this.factory.getDisplay().info(
-					"Total: US$ " + requestService("dolares",coin) + "." + requestService("centavos",coin));
+					"Total: US$ " + requestService("dolares", coin) + "."
+							+ requestService("centavos", coin));
 			return;
-		}else{
+		} else {
 			this.factory.getDisplay().warn(Messages.CAN_NOT_INSERT_COINS);
 			this.returnCoin(coin);
 		}
@@ -43,7 +45,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	public void cancel() {
 		requestService("cancel");
 	}
-	
+
 	private void returnCoin(Coin coin) {
 		this.factory.getCashBox().release(coin);
 	}
@@ -52,10 +54,12 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		if (drink.equals(Drink.BOUILLON)) {
 			requestService("setVALORCAFE");
 		}
-		if ((Integer)requestService("calculaTroco") < 0) {
-			this.factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
-			requestService("returnCoin");
-			return;
+		if (!this.lerCacha) {
+			if ((Integer) requestService("calculaTroco") < 0) {
+				this.factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
+				requestService("returnCoin");
+				return;
+			}
 		}
 		notAlerta = (Boolean) requestService("VerificaDrink", drink);
 		if (!notAlerta) {
@@ -63,19 +67,27 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			return;
 		}
 		int[] troco = null;
-
-		try {
-			troco = (int[]) requestService("planCoins",(Integer)requestService("calculaTroco"));
-		} catch (Exception e) {
-			this.factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
-			requestService("returnCoin");
-			return;
+		if (this.lerCoin) {
+			try {
+				troco = (int[]) requestService("planCoins",
+						(Integer) requestService("calculaTroco"));
+			} catch (Exception e) {
+				this.factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
+				requestService("returnCoin");
+				return;
+			}
+		}
+		if (this.lerCacha) {
+			this.factory.getPayrollSystem().debit(
+					(Integer) this.requestService("getValorCafe"),
+					this.badgeCode);
 		}
 		this.factory.getDisplay().info(Messages.MIXING);
 		requestService("comparaDrink", drink);
 		requestService("LiberandoBebida");
-		requestService("releaseCoins",troco);
-
+		if (this.lerCoin) {
+			requestService("releaseCoins", troco);
+		}
 		requestService("zeraVecto");
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
@@ -87,12 +99,12 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 	}
 
 	public void readBadge(int badgeCode) {
-		if(!this.lerCoin){
+		this.badgeCode = badgeCode;
+		if (!this.lerCoin) {
 			this.factory.getDisplay().info(Messages.BADGE_READ);
 			this.lerCacha = true;
-		}
-		else{
-            this.factory.getDisplay().warn(Messages.CAN_NOT_READ_BADGE);
+		} else {
+			this.factory.getDisplay().warn(Messages.CAN_NOT_READ_BADGE);
 		}
 	}
 }
