@@ -24,6 +24,7 @@ public abstract class CoffeeMachineTest {
 	protected Dispenser creamerDispenser;
 	protected Dispenser bouillonDispenser;
 	private PayrollSystem payrollSystem;
+	protected ButtonDisplay buttonDisplay; 
 
 	protected CoffeeMachine createFacade(ComponentsFactory factory) {
 		CoffeeMachine coffeeMachine = null;
@@ -60,6 +61,7 @@ public abstract class CoffeeMachineTest {
 		creamerDispenser = factory.getCreamerDispenser();
 		bouillonDispenser = factory.getBouillonDispenser();
 		payrollSystem = factory.getPayrollSystem();
+		buttonDisplay = factory.getButtonDisplay();
 	}
 
 	@After
@@ -234,15 +236,15 @@ public abstract class CoffeeMachineTest {
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	protected void validSession(Drink drink, Coin... coins) {
+	protected void validSession(Button drink, Coin... coins) {
 		facade = createFacade(factory);
 		insertCoins(coins);
 
 		switch (drink) {
-		case BLACK:
+		case BUTTON_1:
 			doContainBlackIngredients();
 			break;
-		case BLACK_SUGAR:
+		case BUTTON_3:
 			doContainBlackSugarIngredients();
 			break;
 		}
@@ -755,6 +757,12 @@ public abstract class CoffeeMachineTest {
 
 	protected void verifyUnknownBadgeCode(InOrder inOrder) {
 		inOrder.verify(display).warn(Messages.UNKNOWN_BADGE_CODE);
+	}
+
+	protected void verifyDefaultButtonConfiguration() {
+		verify(buttonDisplay).show("Black: $0.35", "White: $0.35",
+				"Black with sugar: $0.35", "White with sugar: $0.35",
+				"Bouillon: $0.25", null, null);
 	}
 
 }
