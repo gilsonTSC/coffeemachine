@@ -1,57 +1,57 @@
 package br.ufpb.dce.aps.coffeemachine.impl;
 
-import br.ufpb.dce.aps.coffeemachine.Drink;
+import br.ufpb.dce.aps.coffeemachine.Button;
 import net.compor.frameworks.jcf.api.Component;
 import net.compor.frameworks.jcf.api.Service;
 
-public class Cafe extends Component{
+public class Cafe extends Component {
 
 	public Cafe() {
 		super("Cafe");
 	}
 
 	@Service
-	public boolean VerificaDrink(Drink drink){
+	public boolean VerificaDrink(Button button) {
 		boolean notAlerta = false;
-		if (drink.equals(Drink.BLACK)) {			
-			notAlerta = (Boolean)requestService("VerificaDrinkPreto");
+		if (button.equals(Button.BUTTON_1)) {
+			notAlerta = (Boolean) requestService("VerificaDrinkPreto");
 		}
-		
-		if (drink.equals(Drink.WHITE)) {
-			notAlerta = (Boolean)requestService("VerificaDrinkBranco");
+
+		if (button.equals(Button.BUTTON_2)) {
+			notAlerta = (Boolean) requestService("VerificaDrinkBranco");
 		}
-		
-		if (drink.equals(Drink.WHITE_SUGAR)) {
+
+		if (button.equals(Button.BUTTON_4)) {
 			notAlerta = (Boolean) requestService("VerificaDrinkBrancoComAcucar");
 		}
 
-		if (drink.equals(Drink.BLACK_SUGAR)) {
-			notAlerta = (Boolean)requestService("VerificaDrinkPretoComAcucar");
+		if (button.equals(Button.BUTTON_3)) {
+			notAlerta = (Boolean) requestService("VerificaDrinkPretoComAcucar");
 		}
-		if(drink.equals(Drink.BOUILLON)){
-			notAlerta = (Boolean)requestService("VerificaDrinkBouillon");
+		if (button.equals(Button.BUTTON_5)) {
+			notAlerta = (Boolean) requestService("VerificaDrinkBouillon");
 		}
 		return notAlerta;
 	}
-	
+
 	@Service
-	public void comparaDrink(Drink drink){
-		if (drink.equals(Drink.BLACK)) {
+	public void comparaDrink(Button button) {
+		if (button.equals(Button.BUTTON_1)) {
 			requestService("liberaIngredientesCafePreto");
 		}
 
-		if (drink.equals(Drink.BLACK_SUGAR)) {
+		if (button.equals(Button.BUTTON_3)) {
 			requestService("LiberaIngredientesCafePretoComAcucar");
 		}
-		if (drink.equals(Drink.WHITE)) {
+		if (button.equals(Button.BUTTON_2)) {
 			requestService("liberaIngredientesCafeBranco");
 		}
-		
-		if (drink.equals(Drink.WHITE_SUGAR)) {
+
+		if (button.equals(Button.BUTTON_4)) {
 			requestService("liberaIngredientesCafeBrancoComAcucar");
 		}
-		if (drink.equals(Drink.BOUILLON)) {
+		if (button.equals(Button.BUTTON_5)) {
 			requestService("liberaIngredientesBouillon");
-		}	
+		}
 	}
 }

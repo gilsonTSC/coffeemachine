@@ -1,11 +1,11 @@
 package br.ufpb.dce.aps.coffeemachine.impl;
 
 import net.compor.frameworks.jcf.api.ComporFacade;
+import br.ufpb.dce.aps.coffeemachine.Button;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
-import br.ufpb.dce.aps.coffeemachine.Drink;
 import br.ufpb.dce.aps.coffeemachine.Messages;
 
 public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
@@ -50,8 +50,8 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.factory.getCashBox().release(coin);
 	}
 
-	public void select(Drink drink) {
-		if (drink.equals(Drink.BOUILLON)) {
+	public void select(Button button) {
+		if (button.equals(Button.BUTTON_5)) {
 			requestService("setVALORCAFE");
 		}
 		if (!this.lerCacha) {
@@ -61,7 +61,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 				return;
 			}
 		}
-		notAlerta = (Boolean) requestService("VerificaDrink", drink);
+		notAlerta = (Boolean) requestService("VerificaDrink", button);
 		if (!notAlerta) {
 			requestService("returnCoin");
 			return;
@@ -85,7 +85,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			}
 		}
 		this.factory.getDisplay().info(Messages.MIXING);
-		requestService("comparaDrink", drink);
+		requestService("comparaDrink", button);
 		requestService("LiberandoBebida");
 		if (this.lerCoin) {
 			requestService("releaseCoins", troco);
@@ -106,6 +106,9 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.factory = factory;
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 		this.addComponents();
+		this.factory.getButtonDisplay().show("Black: $0.35", "White: $0.35",
+				"Black with sugar: $0.35", "White with sugar: $0.35",
+				"Bouillon: $0.25", null, null);
 	}
 
 	public void readBadge(int badgeCode) {

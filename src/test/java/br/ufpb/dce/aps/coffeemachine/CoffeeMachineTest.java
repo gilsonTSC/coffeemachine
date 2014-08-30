@@ -186,7 +186,7 @@ public abstract class CoffeeMachineTest {
 		doContainBlackIngredients();
 
 		// Operation under test
-		facade.select(Drink.BLACK);
+		facade.select(Button.BUTTON_1);
 
 		// Verification
 		verifyBlackPlan(inOrder);
@@ -216,7 +216,7 @@ public abstract class CoffeeMachineTest {
 	@Test
 	public void twoDrinks() {
 		// Preparing scenario: first drink
-		validSession(Drink.BLACK, Coin.dime, Coin.quarter);
+		validSession(Button.BUTTON_1, Coin.dime, Coin.quarter);
 
 		// Preparing scenario: second drink
 		insertCoins(Coin.dime, Coin.quarter);
@@ -226,7 +226,7 @@ public abstract class CoffeeMachineTest {
 		doContainBlackSugarIngredients();
 
 		// Operation under test
-		facade.select(Drink.BLACK_SUGAR);
+		facade.select(Button.BUTTON_3);
 
 		// Verification
 		verifyBlackSugarPlan(inOrder);
@@ -270,7 +270,7 @@ public abstract class CoffeeMachineTest {
 	@Test
 	public void drinkAndCancel() {
 		// Preparing scenario: first drink
-		validSession(Drink.BLACK_SUGAR, Coin.dime, Coin.quarter);
+		validSession(Button.BUTTON_3, Coin.dime, Coin.quarter);
 
 		// Preparing scenario: before cancel
 		insertCoins(Coin.dollar);
@@ -304,7 +304,7 @@ public abstract class CoffeeMachineTest {
 		doContainBlackIngredients();
 
 		// Operation under test
-		facade.select(Drink.BLACK);
+		facade.select(Button.BUTTON_1);
 
 		// Verification
 		verifyBlackPlan(inOrder);
@@ -324,7 +324,7 @@ public abstract class CoffeeMachineTest {
 		doContain(cupDispenser, 1);
 
 		// Operation under test
-		facade.select(Drink.BLACK);
+		facade.select(Button.BUTTON_1);
 
 		// Verification
 		inOrder.verify(cupDispenser).contains(1);
@@ -345,7 +345,7 @@ public abstract class CoffeeMachineTest {
 		doNotContain(sugarDispenser, anyDouble()); // Out of Sugar
 
 		// Operation under test
-		facade.select(Drink.BLACK_SUGAR);
+		facade.select(Button.BUTTON_3);
 
 		// Verification
 		inOrder.verify(cupDispenser).contains(1);
@@ -364,7 +364,7 @@ public abstract class CoffeeMachineTest {
 		doContain(cupDispenser, 1);
 
 		// Operation under test
-		facade.select(Drink.BLACK);
+		facade.select(Button.BUTTON_1);
 
 		// Verification
 		inOrder.verify(cupDispenser).contains(1);
@@ -381,7 +381,7 @@ public abstract class CoffeeMachineTest {
 		doNotContain(cupDispenser, 1); // Out of Cup
 
 		// Operation under test
-		facade.select(Drink.BLACK_SUGAR);
+		facade.select(Button.BUTTON_3);
 
 		// Verification
 		inOrder.verify(cupDispenser).contains(1);
@@ -397,7 +397,7 @@ public abstract class CoffeeMachineTest {
 		doContainWhiteIngredients();
 
 		// Operation under test
-		facade.select(Drink.WHITE);
+		facade.select(Button.BUTTON_2);
 
 		// Verification
 		verifyWhitePlan(inOrder);
@@ -416,7 +416,7 @@ public abstract class CoffeeMachineTest {
 		doContainWhiteSugarIngredients();
 
 		// Operation under test
-		facade.select(Drink.WHITE_SUGAR);
+		facade.select(Button.BUTTON_4);
 
 		// Verification
 		verifyWhiteSugarPlan(inOrder);
@@ -435,7 +435,7 @@ public abstract class CoffeeMachineTest {
 		doContainBlackIngredients();
 
 		// Operation under test
-		facade.select(Drink.BLACK);
+		facade.select(Button.BUTTON_1);
 
 		// Verification
 		inOrder.verify(display).warn(Messages.NO_ENOUGHT_MONEY);
@@ -449,7 +449,7 @@ public abstract class CoffeeMachineTest {
 		doContainBlackIngredients();
 
 		// Operation under test
-		facade.select(Drink.BLACK);
+		facade.select(Button.BUTTON_1);
 
 		// Verification
 		inOrder.verify(display).warn(Messages.NO_ENOUGHT_MONEY);
@@ -467,7 +467,7 @@ public abstract class CoffeeMachineTest {
 		doContainWhiteIngredients();
 
 		// Operation under test
-		facade.select(Drink.WHITE);
+		facade.select(Button.BUTTON_2);
 
 		// Verification
 		verifyWhitePlan(inOrder);
@@ -486,7 +486,7 @@ public abstract class CoffeeMachineTest {
 		doContainWhiteIngredients();
 
 		// Operation under test
-		facade.select(Drink.WHITE);
+		facade.select(Button.BUTTON_2);
 
 		// Verification
 		verifyWhitePlan(inOrder);
@@ -509,7 +509,7 @@ public abstract class CoffeeMachineTest {
 		doNotContain(creamerDispenser, anyDouble()); // Out of Creamer!
 
 		// Operation under test
-		facade.select(Drink.WHITE);
+		facade.select(Button.BUTTON_2);
 
 		// Verification
 		inOrder.verify(cupDispenser).contains(1);
@@ -527,7 +527,7 @@ public abstract class CoffeeMachineTest {
 		doContainBlackIngredients();
 
 		// Operation under test
-		facade.select(Drink.BLACK);
+		facade.select(Button.BUTTON_1);
 
 		// Verification
 		verifyBlackPlan(inOrder);
@@ -544,7 +544,7 @@ public abstract class CoffeeMachineTest {
 		doContainBlackSugarIngredients();
 
 		// Operation under test
-		facade.select(Drink.BLACK_SUGAR);
+		facade.select(Button.BUTTON_3);
 
 		// Verification
 		verifyBlackSugarPlan(inOrder);
@@ -561,7 +561,7 @@ public abstract class CoffeeMachineTest {
 		doContainWhiteIngredients();
 
 		// Operation under test
-		facade.select(Drink.WHITE);
+		facade.select(Button.BUTTON_2);
 
 		// Verification
 		verifyWhitePlan(inOrder);
@@ -578,7 +578,7 @@ public abstract class CoffeeMachineTest {
 		doContainWhiteSugarIngredients();
 
 		// Operation under test
-		facade.select(Drink.WHITE_SUGAR);
+		facade.select(Button.BUTTON_4);
 
 		// Verification
 		verifyWhiteSugarPlan(inOrder);
@@ -597,7 +597,7 @@ public abstract class CoffeeMachineTest {
 		doContain(cupDispenser, 1);
 
 		// Operation under test
-		facade.select(Drink.BOUILLON);
+		facade.select(Button.BUTTON_5);
 
 		// Verification
 		verifyBouillonPlan(inOrder);
