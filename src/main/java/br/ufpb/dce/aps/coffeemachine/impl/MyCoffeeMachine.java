@@ -90,6 +90,9 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		if(!this.lerCoin){
 			this.factory.getDisplay().info(Messages.BADGE_READ);
 			this.lerCacha = true;
-		}		
+		}
+		else{
+            this.factory.getDisplay().warn(Messages.CAN_NOT_READ_BADGE);
+		}
 	}
 }
