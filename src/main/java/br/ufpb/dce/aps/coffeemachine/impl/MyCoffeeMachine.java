@@ -78,9 +78,11 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			}
 		}
 		if (this.lerCacha) {
-			this.factory.getPayrollSystem().debit(
-					(Integer) this.requestService("getValorCafe"),
-					this.badgeCode);
+			if(!this.debitar((Integer) this.requestService("getValorCafe"), this.badgeCode)){
+				this.factory.getDisplay().warn(Messages.UNKNOWN_BADGE_CODE);
+				this.factory.getDisplay().info(Messages.INSERT_COINS);
+				return;
+			}
 		}
 		this.factory.getDisplay().info(Messages.MIXING);
 		requestService("comparaDrink", drink);
@@ -90,6 +92,14 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		}
 		requestService("zeraVecto");
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
+	}
+
+	private boolean debitar(int cents, int badgeCode) {
+		if (!this.factory.getPayrollSystem().debit(cents, badgeCode)) {
+			//this.factory.getDisplay().warn(Messages.UNKNOWN_BADGE_CODE);
+			return false;
+		}
+		return true;
 	}
 
 	public void setFactory(ComponentsFactory factory) {
