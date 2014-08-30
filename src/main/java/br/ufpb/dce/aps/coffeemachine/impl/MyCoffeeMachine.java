@@ -52,7 +52,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 	public void select(Button button) {
 		if (button.equals(Button.BUTTON_5)) {
-			requestService("setVALORCAFE");
+			requestService("setVALORCAFE", 25);
 		}
 		if (!this.lerCacha) {
 			if ((Integer) requestService("calculaTroco") < 0) {
@@ -78,7 +78,8 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 			}
 		}
 		if (this.lerCacha) {
-			if(!this.debitar((Integer) this.requestService("getValorCafe"), this.badgeCode)){
+			if (!this.debitar((Integer) this.requestService("getValorCafe"),
+					this.badgeCode)) {
 				this.factory.getDisplay().warn(Messages.UNKNOWN_BADGE_CODE);
 				this.factory.getDisplay().info(Messages.INSERT_COINS);
 				return;
@@ -96,7 +97,7 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 
 	private boolean debitar(int cents, int badgeCode) {
 		if (!this.factory.getPayrollSystem().debit(cents, badgeCode)) {
-			//this.factory.getDisplay().warn(Messages.UNKNOWN_BADGE_CODE);
+			// this.factory.getDisplay().warn(Messages.UNKNOWN_BADGE_CODE);
 			return false;
 		}
 		return true;
@@ -106,9 +107,13 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		this.factory = factory;
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 		this.addComponents();
-		this.factory.getButtonDisplay().show("Black: $0.35", "White: $0.35",
-				"Black with sugar: $0.35", "White with sugar: $0.35",
-				"Bouillon: $0.25", null, null);
+		this.factory.getButtonDisplay().show(
+				"Black: $0." + this.requestService("get",Button.BUTTON_1),
+				"White: $0." + this.requestService("get",Button.BUTTON_2),
+				"Black with sugar: $0." + this.requestService("get",Button.BUTTON_3),
+				"White with sugar: $0." + this.requestService("get",Button.BUTTON_4),
+				"Bouillon: $0." + this.requestService("get",Button.BUTTON_5), null,
+				null);
 	}
 
 	public void readBadge(int badgeCode) {
@@ -119,5 +124,9 @@ public class MyCoffeeMachine extends ComporFacade implements CoffeeMachine {
 		} else {
 			this.factory.getDisplay().warn(Messages.CAN_NOT_READ_BADGE);
 		}
+	}
+
+	public void setPrice(Button button, int priceCents) {
+		this.requestService("put", button, priceCents);
 	}
 }

@@ -1,9 +1,11 @@
 package br.ufpb.dce.aps.coffeemachine.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.compor.frameworks.jcf.api.Component;
 import net.compor.frameworks.jcf.api.Service;
+import br.ufpb.dce.aps.coffeemachine.Button;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
 import br.ufpb.dce.aps.coffeemachine.ComponentsFactory;
@@ -16,6 +18,7 @@ public class MyCoin extends Component{
 	private ArrayList<Coin> moedas;
 	private int VALORCAFE = 35;
 	int[] trocoPlan = new int[6];
+	private static HashMap<Button, Integer> valorDrink = new HashMap<Button, Integer>();
 	
 	public MyCoin(ComponentsFactory factory){
 		super("Classe moedas");
@@ -23,6 +26,8 @@ public class MyCoin extends Component{
 		this.dolares = 0;
 		this.centavos = 0;
 		this.moedas = new ArrayList<Coin>();
+		//this.valorDrink = new HashMap<Button, Integer>();
+		this.addValores();
 	}
 	@Service
 	public void addCoin(Coin coin){
@@ -92,8 +97,8 @@ public class MyCoin extends Component{
 	}
 	
 	@Service
-	public void setVALORCAFE(){
-		this.VALORCAFE = 25;
+	public void setVALORCAFE(int valor){
+		this.VALORCAFE = valor;
 	}
 	@Service
 	public void zeraVecto() {
@@ -110,5 +115,20 @@ public class MyCoin extends Component{
 	@Service
 	public int getValorCafe() {
 		return this.VALORCAFE;
+	}
+	@Service
+	public static void put(Button button, int priceCents){
+		valorDrink.put(button, priceCents);
+	}
+	private static void addValores(){
+		valorDrink.put(Button.BUTTON_1, 35);
+		valorDrink.put(Button.BUTTON_2, 35);
+		valorDrink.put(Button.BUTTON_3, 35);
+		valorDrink.put(Button.BUTTON_4, 35);
+		valorDrink.put(Button.BUTTON_5, 25);
+	}
+	@Service
+	public static int get(Button button){
+		return valorDrink.get(button);
 	}
 }
